@@ -46,16 +46,23 @@ function chooseOption(evt) {
 
     fetchCatByBreed(evt.currentTarget.value)
         .then((response) => {
-            const markUpInfo = response.data.map(({ id, url, breeds : { 0: { name, description, temperament } } }) => {
+            if (response.status === 200) {
+                const markUpInfo = response.data.map(({ id, url, breeds : { 0: { name, description, temperament } } }) => {
                return `
-            <img src="${url}" alt="${name}" width="300">
-            <div class="info">
-                <h1 class="title">${name}</h1>
-                <p>${description}</p>
-                <p><span class="bold">Temperament:</span> ${temperament}</p>
-            </div>`
-        }).join('');
-        catInfo.insertAdjacentHTML('afterbegin', markUpInfo);
+                <img src="${url}" alt="${name}" width="300">
+                <div class="info">
+                    <h1 class="title">${name}</h1>
+                    <p>${description}</p>
+                    <p><span class="bold">Temperament:</span> ${temperament}</p>
+                </div>`
+                }).join('');
+                catInfo.insertAdjacentHTML('afterbegin', markUpInfo);
+
+            }else{
+                 iziToast.error({
+                    message: `Oops! Something went wrong! Try reloading the page!`,
+                });
+            }
         })
         .catch((err) => {
             iziToast.error({
